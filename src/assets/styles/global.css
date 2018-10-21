@@ -1,0 +1,12 @@
+.padding_0 {
+  padding: 0 !important;
+}
+.left_text_align {
+  text-align: left;
+}
+.center_text_align {
+  text-align: center;
+}
+.timestamp {
+  font-size: 0.8em;
+}

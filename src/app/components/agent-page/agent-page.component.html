@@ -1,0 +1,64 @@
+<h2 class="center_text_align">Agent Page</h2>
+<table class="table">
+  <thead>
+    <th>Email Id</th>
+    <th>Status</th>
+    <th>Date Created</th>
+    <th>Date Updated</th>
+    <th>Complaint Heading</th>
+    <th>Actions</th>
+  </thead>
+  <tbody *ngIf="isRecordsFound">
+    <tr *ngFor="let complaint of complaints">
+      <td>{{complaint.email}}</td>
+      <td>{{complaint.status | displayStatus}}</td>
+      <td>{{complaint.date_created | date}}</td>
+      <td>{{complaint.date_updated | date}}</td>
+      <td>{{complaint.heading}}</td>
+      <td><button class="btn btn-sm btn-info" (click)="viewComplaintDetails(complaint.id)">View</button></td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!isRecordsFound">
+  <h5 class="text-center">No Records Found !!!</h5>
+</div>
+<hr>
+<!-- View Complaint details -->
+<div class="card text-center" *ngIf="complaintObject">
+  <div class="card-header">
+    <h4>Complaint Details</h4>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{complaintObject.heading}}</h5>
+    <p class="col-12 row">
+      <span class="col-4"><strong>Date Created:</strong> {{complaintObject.date_created | date}}</span>
+      <span class="col-4">
+        <strong>Status:</strong>
+        <select class="form-control form-control-sm" name="status" [(ngModel)]="complaintStatus" (change)="saveStatus()">
+          <option *ngFor="let status.key as status of statusValues">{{status.value}}</option>
+        </select>
+      </span>
+      <span class="col-4"><strong>Date Updated:</strong>{{complaintObject.date_updated | date}}</span>
+    </p>
+    <p class="card-text">{{complaintObject.description}}</p>
+    <hr>
+    <div class="col-lg-6 col-md-8 col-xs-10 offset-lg-3 offset-md-2 offset-xs-1">
+      <h3>Comments</h3>
+      <div *ngFor="let comment of complaintObject.comments" class="list-group list-group-flush">
+        <div class="list-group-item">
+          <span class="row"><span class="timestamp">{{comment.date | date:'medium'}}</span><span class="offset-1"><strong>By:</strong>
+              {{comment.email}}</span></span>
+          <span class="row"><strong>Comment : </strong> <span>{{comment.comment}}</span></span>
+        </div>
+      </div>
+      <div class="row">
+        <input type="text" class="form-control" placeholder="Enter comment here...." [(ngModel)]="newComment">
+        <button (click)="addComment()" class="btn btn-sm btn-warning" [disabled]="!newComment">Comment</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+    <Button class="btn btn-danger" (click)="closeComplaintDetails()">Save Status</Button>
+    <Button class="btn btn-secondary" (click)="closeComplaintDetails()">Cancel</Button>
+  </div>
+</div>
