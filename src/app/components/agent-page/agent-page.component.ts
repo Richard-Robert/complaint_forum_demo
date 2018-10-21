@@ -85,6 +85,24 @@ export class AgentPageComponent implements OnInit {
     });
   }
   saveStatus() {
-    console.log(this.complaintStatus);
+    if (this.complaintStatus !== this.complaintObject.status) {
+      const updatedTime = new Date();
+      const payload = {
+        complaintId: this.complaintObject.id,
+        newStatus: this.complaintStatus,
+        updatedTime: updatedTime
+      };
+      console.log(this.complaintStatus);
+      this._restService.updateComplaintStatus(payload).subscribe(data => {
+        if (data) {
+          this.complaints = data;
+          this.closeComplaintDetails();
+          this.newComment = '';
+          this._changeDetection.markForCheck();
+        }
+      });
+    } else {
+      alert('Status has not been modified');
+    }
   }
 }

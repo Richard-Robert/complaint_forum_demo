@@ -49,4 +49,11 @@ export class RestApiService {
       commentObject
     );
   }
+
+  updateComplaintStatus(statusObject): Observable<any> {
+    return this.http.put(
+      `${REST_API_CONFIG.restAPIUrl}${ENDPOINTS._updateComplaintStatus}`,
+      statusObject
+    );
+  }
 }

@@ -34,8 +34,8 @@
       <span class="col-4"><strong>Date Created:</strong> {{complaintObject.date_created | date}}</span>
       <span class="col-4">
         <strong>Status:</strong>
-        <select class="form-control form-control-sm" name="status" [(ngModel)]="complaintStatus" (change)="saveStatus()">
-          <option *ngFor="let status.key as status of statusValues">{{status.value}}</option>
+        <select class="form-control form-control-sm" name="status" [(ngModel)]="complaintStatus">
+          <option *ngFor="let status of statusValues" [ngValue]="status.key">{{status.value}}</option>
         </select>
       </span>
       <span class="col-4"><strong>Date Updated:</strong>{{complaintObject.date_updated | date}}</span>
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="card-footer text-muted">
-    <Button class="btn btn-danger" (click)="closeComplaintDetails()">Save Status</Button>
+    <Button class="btn btn-danger" (click)="saveStatus()">Save Status</Button>
     <Button class="btn btn-secondary" (click)="closeComplaintDetails()">Cancel</Button>
   </div>
 </div>
