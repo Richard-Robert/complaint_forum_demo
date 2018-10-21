@@ -8,5 +8,6 @@ export const ENDPOINTS = {
   _getCustomerComplaints: '/api/getCustomerComplaints',
   _addCustomerComment: '/api/addCustomerComment',
   _addAgentComment: '/api/addAgentComment',
-  _updateComplaintStatus: '/api/updateComplaintStatus'
+  _updateComplaintStatus: '/api/updateComplaintStatus',
+  _logComplaint: '/api/logComplaint'
 };

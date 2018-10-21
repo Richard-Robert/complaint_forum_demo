@@ -56,4 +56,10 @@ export class RestApiService {
       statusObject
     );
   }
+  logComplaint(complaintObject): Observable<any> {
+    return this.http.put(
+      `${REST_API_CONFIG.restAPIUrl}${ENDPOINTS._logComplaint}`,
+      complaintObject
+    );
+  }
 }

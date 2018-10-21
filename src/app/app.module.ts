@@ -13,6 +13,7 @@ import { HTTPAuthInterceptor } from './services/http-interceptor.service';
 import { AgentPageComponent } from './components/agent-page/agent-page.component';
 import { CustomerPageComponent } from './components/customer-page/customer-page.component';
 import { DisplayStatusPipe } from './pipes/display-status.pipe';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DisplayStatusPipe } from './pipes/display-status.pipe';
     SignUpComponent,
     AgentPageComponent,
     CustomerPageComponent,
-    DisplayStatusPipe
+    DisplayStatusPipe,
+    NavBarComponent
   ],
   imports: [
     BrowserModule,

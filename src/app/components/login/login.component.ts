@@ -18,6 +18,16 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const authenticationDetails = JSON.parse(
+      localStorage.getItem('Authentication Details')
+    );
+    if (authenticationDetails && authenticationDetails.auth) {
+      if (authenticationDetails.userType === 'agent') {
+        this.router.navigate(['/agent']);
+      } else if (authenticationDetails.userType === 'customer') {
+        this.router.navigate(['/customer']);
+      }
+    }
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       phone: ['', Validators.required],
@@ -25,7 +35,6 @@ export class LoginComponent implements OnInit {
     });
   }
   login() {
-    console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       this._restService.userLogin(this.loginForm.value).subscribe(
         data => {

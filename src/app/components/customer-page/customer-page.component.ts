@@ -5,6 +5,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import * as helper from '../../utils/helper';
 
 @Component({
   selector: 'app-customer-page',
@@ -18,18 +20,22 @@ import { RestApiService } from 'src/app/services/rest-api.service';
 export class CustomerPageComponent implements OnInit {
   complaints: Array<any>;
   complaintObject: any;
+  islogComplaint: Boolean = false;
   newComment: String;
   isRecordsFound: Boolean = false;
+  complaintForm: FormGroup;
 
   constructor(
     private _restService: RestApiService,
-    private _changeDetection: ChangeDetectorRef
+    private _changeDetection: ChangeDetectorRef,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
     this._restService.getCustomerComplaints().subscribe(
       data => {
         this.complaints = data;
+        this.complaints.sort(helper.dateComparer);
         if (this.complaints.length === 0) {
           this.isRecordsFound = false;
         } else {
@@ -41,6 +47,10 @@ export class CustomerPageComponent implements OnInit {
         console.log(err);
       }
     );
+    this.complaintForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required]
+    });
   }
   viewComplaintDetails(id) {
     this.complaintObject = {};
@@ -53,8 +63,8 @@ export class CustomerPageComponent implements OnInit {
         this.complaintObject['description'] = complaint.description;
         this.complaintObject['heading'] = complaint.heading;
         this.complaintObject['comments'] = complaint.comments;
+        break;
       }
-      break;
     }
   }
   closeComplaintDetails() {
@@ -69,8 +79,43 @@ export class CustomerPageComponent implements OnInit {
     };
     this._restService.addCustomerComment(payload).subscribe(data => {
       this.complaints = data;
+      this.complaints.sort(helper.dateComparer);
       this.viewComplaintDetails(payload.complaintId);
       this._changeDetection.markForCheck();
     });
+  }
+  openLogComplaint() {
+    this.islogComplaint = true;
+  }
+
+  closeLogComplaint() {
+    this.islogComplaint = false;
+  }
+
+  logComplaint() {
+    if (this.complaintForm.valid) {
+      const currentDate = new Date();
+      const payload = {
+        complaintHeading: this.complaintForm.value.heading,
+        complaintDescription: this.complaintForm.value.description,
+        dateCreated: currentDate,
+        dateUpdated: currentDate
+      };
+      this._restService.logComplaint(payload).subscribe(
+        data => {
+          this.complaints = data;
+          this.complaints.sort(helper.dateComparer);
+          this.complaintForm.reset();
+          this._changeDetection.markForCheck();
+        },
+        err => {
+          if (err) {
+            alert(err.error);
+          }
+        }
+      );
+    } else {
+      alert('Inavlid values entered');
+    }
   }
 }

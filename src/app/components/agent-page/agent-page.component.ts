@@ -4,7 +4,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
+
 import { RestApiService } from '../../services/rest-api.service';
+import * as helper from '../../utils/helper';
 
 @Component({
   selector: 'app-agent-page',
@@ -37,6 +39,7 @@ export class AgentPageComponent implements OnInit {
     this._restService.getAllCustomerComplaints().subscribe(
       data => {
         this.complaints = data;
+        this.complaints.sort(helper.dateComparer);
         if (this.complaints.length === 0) {
           this.isRecordsFound = false;
         } else {
@@ -49,6 +52,7 @@ export class AgentPageComponent implements OnInit {
       }
     );
   }
+
   viewComplaintDetails(id) {
     this.complaintObject = {};
     for (const complaint of this.complaints) {
@@ -61,13 +65,15 @@ export class AgentPageComponent implements OnInit {
         this.complaintObject['description'] = complaint.description;
         this.complaintObject['heading'] = complaint.heading;
         this.complaintObject['comments'] = complaint.comments;
+        break;
       }
-      break;
     }
   }
+
   closeComplaintDetails() {
     this.complaintObject = null;
   }
+
   addComment() {
     const commentTime = new Date();
     const payload = {
@@ -78,12 +84,14 @@ export class AgentPageComponent implements OnInit {
     this._restService.addAgentComment(payload).subscribe(data => {
       if (data) {
         this.complaints = data;
+        this.complaints.sort(helper.dateComparer);
         this.viewComplaintDetails(payload.complaintId);
         this.newComment = '';
         this._changeDetection.markForCheck();
       }
     });
   }
+
   saveStatus() {
     if (this.complaintStatus !== this.complaintObject.status) {
       const updatedTime = new Date();
@@ -92,10 +100,10 @@ export class AgentPageComponent implements OnInit {
         newStatus: this.complaintStatus,
         updatedTime: updatedTime
       };
-      console.log(this.complaintStatus);
       this._restService.updateComplaintStatus(payload).subscribe(data => {
         if (data) {
           this.complaints = data;
+          this.complaints.sort(helper.dateComparer);
           this.closeComplaintDetails();
           this.newComment = '';
           this._changeDetection.markForCheck();
